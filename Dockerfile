@@ -9,7 +9,10 @@ RUN apt-get update && apt-get install -y \
     make \
     gdb-multiarch \
     xxd \
+    git \
     && rm -rf /var/lib/apt/lists/*
+
+RUN git config --global push.autoSetupRemote true
 
 WORKDIR /aeonos
 
