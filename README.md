@@ -15,7 +15,7 @@ Day 1. The journey begins.
 - Testing: QEMU
 
 ## Structure
-\`\`\`
+```
 AeonOS/
 ├── boot/        ← Bootloader & ARM entry point
 ├── kernel/      ← Core kernel code
@@ -23,7 +23,7 @@ AeonOS/
 ├── lib/         ← Shared libraries
 ├── tools/       ← Build & development tools
 └── docs/        ← Documentation
-\`\`\`
+```
 
 ## Building
 Coming soon.
