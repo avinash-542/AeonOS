@@ -5,3 +5,4 @@
 *.map
 build/
 .DS_Store
+.vscode/
