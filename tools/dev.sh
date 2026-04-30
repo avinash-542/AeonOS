@@ -5,4 +5,4 @@ docker run -it \
     -v ~/.gitconfig:/root/.gitconfig:ro \
     -v ~/.ssh:/root/.ssh:ro \
     --workdir /aeonos \
-    aeonos-dev bash
+    aeonos-dev bash -c "git config --local push.autoSetupRemote true && bash"
