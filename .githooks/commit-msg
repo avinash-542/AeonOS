@@ -1,0 +1,27 @@
+#!/bin/bash
+
+commit_msg=$(cat "$1")
+
+pattern="^(feat|fix|build|boot|kernel|driver|docs|chore|test|refactor)(\(.+\))?: .{1,72}$"
+
+if ! echo "$commit_msg" | grep -qE "$pattern"; then
+  echo ""
+  echo "  Invalid commit message format."
+  echo ""
+  echo "  Expected format:"
+  echo "    <type>(<scope>): <description>"
+  echo ""
+  echo "  Valid types:"
+  echo "    feature, fix, build, boot, kernel, driver, docs, chore, test, refactor"
+  echo ""
+  echo "  Examples:"
+  echo "    feature(kernel): add interrupt handler"
+  echo "    fix(boot): correct stack pointer alignment"
+  echo "    docs(readme): update build instructions"
+  echo ""
+  echo "  Your message: '$commit_msg'"
+  echo ""
+  exit 1
+fi
+
+exit 0
