@@ -5,4 +5,4 @@ docker run -it \
     -v ~/.gitconfig:/root/.gitconfig:ro \
     -v ~/.ssh:/root/.ssh:ro \
     --workdir /aeonos \
-    aeonos-dev bash -c "git config --local push.autoSetupRemote true && bash"
+    aeonos-dev bash -c "git remote set-url origin git@github.com:avinash-542/AeonOS.git && git config --local push.autoSetupRemote true && bash"
