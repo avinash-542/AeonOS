@@ -1,28 +1,28 @@
-#define UART0_BASE 0x09000000
+#include "../drivers/uart.h"
+#include "hw_detect.h"
+#include "bench.h"
 
-static inline void uart_putc(char c) {
-    volatile unsigned int *uart = (unsigned int *)UART0_BASE;
-    *uart = (unsigned int)c;
-}
+/*
+ * x0 holds the DTB address at entry (Linux AArch64 boot protocol).
+ * boot.S never touches x0, so it arrives here intact from QEMU.
+ */
 
-void uart_puts(const char *s) {
-    while (*s) uart_putc(*s++);
-}
+static hw_info_t    hw;
+static bench_result_t bench;
 
-void uart_put_newline(void) {
-    uart_putc('\r');
-    uart_putc('\n');
-}
+void kernel_main(void *dtb_addr) {
+    uart_puts("=============================="); uart_newline();
+    uart_puts("       Welcome to AeonOS      "); uart_newline();
+    uart_puts("  That which cannot be destroyed."); uart_newline();
+    uart_puts("=============================="); uart_newline();
 
-void kernel_main(void) {
-    uart_puts("==============================");
-    uart_put_newline();
-    uart_puts("       Welcome to AeonOS      ");
-    uart_put_newline();
-    uart_puts("  That which cannot be destroyed.");
-    uart_put_newline();
-    uart_puts("==============================");
-    uart_put_newline();
+    hw_detect(&hw, dtb_addr);
+    hw_print_report(&hw);
+
+    bench_run(&hw, &bench);
+    bench_print(&bench);
+
+    uart_puts("Kernel initialized. Halting."); uart_newline();
 
     while (1) {}
 }
