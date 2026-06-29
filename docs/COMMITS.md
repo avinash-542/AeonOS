@@ -3,7 +3,7 @@
 Format: <type>(<scope>): <description>
 
 ## Types
-- feat     → new feature or capability
+- feature  → new feature or capability
 - fix      → bug fix
 - build    → Makefile, Docker, toolchain
 - boot     → bootloader changes
@@ -18,7 +18,7 @@ Format: <type>(<scope>): <description>
 - kernel, boot, driver, mm, scheduler, uart, fs, lib
 
 ## Examples
-feat(kernel): add basic interrupt descriptor table
+feature(kernel): add basic interrupt descriptor table
 fix(boot): align stack to 16-byte boundary
 build(docker): pin GCC version to 13.x
 docs(readme): add QEMU boot instructions
