@@ -5,6 +5,7 @@ SRCS    = boot/boot.S           \
           kernel/main.c         \
           kernel/exceptions.S        \
           kernel/exception_handler.c \
+          kernel/esr.c               \
           kernel/hw_detect.c         \
           kernel/dtb.c          \
           kernel/bench.c        \

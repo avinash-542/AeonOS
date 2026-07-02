@@ -1,4 +1,5 @@
 #include "exceptions.h"
+#include "esr.h"
 #include "../drivers/uart.h"
 
 static const char *exc_type_name(uint64_t type) {
@@ -56,6 +57,9 @@ void exc_handler(const exc_frame_t *frame, uint64_t type) {
     }
     print_reg("x29", frame->x[29]);   /* frame pointer */
     print_reg("x30", frame->x[30]);   /* link register */
+    uart_newline();
+
+    esr_decode(frame->esr);
     uart_newline();
 
     uart_puts("Kernel halted. No recovery possible at this stage."); uart_newline();
