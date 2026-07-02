@@ -3,8 +3,9 @@ CFLAGS  = -ffreestanding -nostdinc -nostdlib -nostartfiles -O2 -I.
 
 SRCS    = boot/boot.S           \
           kernel/main.c         \
-          kernel/exceptions.S   \
-          kernel/hw_detect.c    \
+          kernel/exceptions.S        \
+          kernel/exception_handler.c \
+          kernel/hw_detect.c         \
           kernel/dtb.c          \
           kernel/bench.c        \
           drivers/uart.c

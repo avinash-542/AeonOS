@@ -57,18 +57,120 @@ exception_vectors:
 .align 7;  b _exc_invalid       /* +0x700  FIQ         */
 .align 7;  b _exc_invalid       /* +0x780  SError      */
 
-/* ── Placeholder stubs ───────────────────────────────────────────────────
- * All handlers currently halt. Context saving and UART reporting
- * will be added in the next commit.
+/* ── Context Save Macro ──────────────────────────────────────────────────
+ *
+ * Saves all general-purpose registers and key system registers onto the
+ * kernel stack, producing an exc_frame_t at the new SP value.
+ *
+ * Frame layout (288 bytes total, 16-byte aligned):
+ *   [sp +   0] x0  .. [sp + 240] x30
+ *   [sp + 248] ELR_EL1   (exception return address)
+ *   [sp + 256] SPSR_EL1  (saved processor state)
+ *   [sp + 264] ESR_EL1   (exception syndrome register)
+ *   [sp + 272] FAR_EL1   (fault address register)
+ *   [sp + 280] (8-byte pad — keeps 288 divisible by 16)
+ *
+ * x9 and x10 are used as scratch registers after their values
+ * are already saved to the frame.
  */
+.macro exc_save
+    sub  sp,  sp,  #288
+    stp  x0,  x1,  [sp, #0]
+    stp  x2,  x3,  [sp, #16]
+    stp  x4,  x5,  [sp, #32]
+    stp  x6,  x7,  [sp, #48]
+    stp  x8,  x9,  [sp, #64]
+    stp  x10, x11, [sp, #80]
+    stp  x12, x13, [sp, #96]
+    stp  x14, x15, [sp, #112]
+    stp  x16, x17, [sp, #128]
+    stp  x18, x19, [sp, #144]
+    stp  x20, x21, [sp, #160]
+    stp  x22, x23, [sp, #176]
+    stp  x24, x25, [sp, #192]
+    stp  x26, x27, [sp, #208]
+    stp  x28, x29, [sp, #224]
+    str  x30,      [sp, #240]
+    mrs  x9,  elr_el1
+    mrs  x10, spsr_el1
+    stp  x9,  x10, [sp, #248]
+    mrs  x9,  esr_el1
+    mrs  x10, far_el1
+    stp  x9,  x10, [sp, #264]
+.endm
+
+/* ── Exception Entry Stubs ───────────────────────────────────────────────
+ *
+ * Each stub:
+ *   1. Saves full CPU context via exc_save macro
+ *   2. Passes frame pointer (sp) in x0 and exception type in x1
+ *   3. Calls the C handler exc_handler(frame, type)
+ *   4. Halts — we do not return from exceptions yet
+ */
+
 _el1h_sync:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_SYNC_EL1H_VAL
+    bl   exc_handler
+    b    _exc_halt
+
 _el1h_irq:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_IRQ_EL1H_VAL
+    bl   exc_handler
+    b    _exc_halt
+
 _el1h_fiq:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_FIQ_EL1H_VAL
+    bl   exc_handler
+    b    _exc_halt
+
 _el1h_serror:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_SERROR_EL1H_VAL
+    bl   exc_handler
+    b    _exc_halt
+
 _el0_sync:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_SYNC_EL0_VAL
+    bl   exc_handler
+    b    _exc_halt
+
 _el0_irq:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_IRQ_EL0_VAL
+    bl   exc_handler
+    b    _exc_halt
+
 _el0_fiq:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_FIQ_EL0_VAL
+    bl   exc_handler
+    b    _exc_halt
+
 _el0_serror:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_SERROR_EL0_VAL
+    bl   exc_handler
+    b    _exc_halt
+
 _exc_invalid:
+    exc_save
+    mov  x0, sp
+    mov  x1, #EXC_INVALID_VAL
+    bl   exc_handler
+    b    _exc_halt
+
+_exc_halt:
 1:  wfe
     b 1b
