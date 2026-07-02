@@ -1,4 +1,5 @@
 #include "../drivers/uart.h"
+#include "exceptions.h"
 #include "hw_detect.h"
 #include "bench.h"
 
@@ -15,6 +16,8 @@ void kernel_main(void *dtb_addr) {
     uart_puts("       Welcome to AeonOS      "); uart_newline();
     uart_puts("  That which cannot be destroyed."); uart_newline();
     uart_puts("=============================="); uart_newline();
+
+    exceptions_init();
 
     hw_detect(&hw, dtb_addr);
     hw_print_report(&hw);

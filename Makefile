@@ -1,11 +1,12 @@
 CC      = aarch64-linux-gnu-gcc
 CFLAGS  = -ffreestanding -nostdinc -nostdlib -nostartfiles -O2 -I.
 
-SRCS    = boot/boot.S        \
-          kernel/main.c      \
-          kernel/hw_detect.c \
-          kernel/dtb.c       \
-          kernel/bench.c     \
+SRCS    = boot/boot.S           \
+          kernel/main.c         \
+          kernel/exceptions.S   \
+          kernel/hw_detect.c    \
+          kernel/dtb.c          \
+          kernel/bench.c        \
           drivers/uart.c
 
 TARGET  = aeonos.img
